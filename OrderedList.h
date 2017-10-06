@@ -1,12 +1,30 @@
-//
-// Created by Carl on 10/2/17.
-//
+/*
+ * OrderedList.h
+ *
+ * COSC 160 Fall 2017
+ * Project #1
+ *
+ * Due on: OCT 4, 2017
+ * Author: Carl Kyrillos
+ *
+ *
+ * In accordance with the class policies and Georgetown's
+ * Honor Code, I certify that, with the exception of the
+ * class resources and those items noted below, I have neither
+ * given nor received any assistance on this project.
+ *
+ * References not otherwise commented within the program source code.
+ * Note that you should not mention any help from the TAs, the professor,
+ * or any code taken from the class textbooks.
+ */
+
 
 #ifndef PROJECT_1_ORDEREDLIST_H
 #define PROJECT_1_ORDEREDLIST_H
 
 #include <fstream>
 #include <string>
+#include <iostream>
 using namespace std;
 
 class OrderedList
@@ -16,17 +34,24 @@ public:
     int size;
 
     OrderedList(string);
+    ~OrderedList();
     void readFromFile(string);
     void mergeSort(int[], int, int);
-    void merge(int[], int, int);
+    void merge(int[], int, int, int);
     int binarySearch(int);
+    void print();
 
 };
 
 OrderedList::OrderedList(string filePath)
 {
     readFromFile(filePath);
-    mergeSort(orderedArray, 0, size);
+    mergeSort(orderedArray, 0, size-1);
+}
+
+OrderedList::~OrderedList()
+{
+    delete []orderedArray;
 }
 
 void OrderedList::readFromFile(string filePath)
@@ -35,24 +60,39 @@ void OrderedList::readFromFile(string filePath)
 
     // Opens file and makes sure it is valid.
     dataFile.open(filePath.c_str());
-    if(dataFile.good())
+
+    if(!dataFile)
+    {
+        cout << "error with file1" << endl;
+        return;
+    }
+
+    if(dataFile.good() && dataFile.is_open())
     {
         // Reads size into size.
         dataFile >> size;
 
-        // Reads data into array.
+        // Allocates memory for the dynamic array
+        int * temp = new int[size];
+
+        // Reads data into temp array.
         for(int i = 0; i < size; i++)
         {
-            dataFile >> orderedArray[i];
+            dataFile >> temp[i];
         }
+
+        // Assigns to real array.
+        orderedArray = temp;
+
+        // Closes file after successfully reading data into array.
+        dataFile.close();
     }
     else
     {
-        cout << "error with file" << endl;
+        // Closes files since something went wrong.
+        // Normally I would include a cout here but the project stated there should be no other output.
         dataFile.close();
-        exit(0);
     }
-
 }
 
 void OrderedList::mergeSort(int data[], int first, int last)
@@ -62,24 +102,28 @@ void OrderedList::mergeSort(int data[], int first, int last)
         int mid = (first + last) / 2;
         mergeSort(data, first, mid);
         mergeSort(data, mid+1, last);
-        merge(data, first, last);
+        merge(data, first, mid, last);
     }
 }
 
-void OrderedList::merge(int data[], int first, int last)
+void OrderedList::merge(int data[], int first, int mid, int last)
 {
-    int mid = (first + last) / 2;
     int leftLength = mid - first + 1;
     int rightLength =  last - mid;
 
     // Creates temp arrays for left and right half of array.
     int L[leftLength], R[rightLength];
+//    int * L = new int[leftLength];
+//    int * R = new int[rightLength];
 
     // Copies data from array to left and right halves.
     for (int i = 0; i < leftLength; i++)
+    {
         L[i] = data[first + i];
-    for (int j = 0; j < rightLength; j++)
-        R[j] = data[mid + 1+ j];
+    }
+    for (int j = 0; j < rightLength; j++) {
+        R[j] = data[mid + 1 + j];
+    }
 
     // Resets iterators
     int i = 0;
@@ -93,14 +137,13 @@ void OrderedList::merge(int data[], int first, int last)
         {
             data[k] = L[i];
             i++;
-            k++;
         }
         else
         {
             data[k] = R[j];
             j++;
-            k++;
         }
+        k++;
     }
 
     // Load remaining elements from left array.
@@ -114,7 +157,6 @@ void OrderedList::merge(int data[], int first, int last)
     {
         data[k] = R[j];
     }
-
 }
 
 int OrderedList::binarySearch(int key)
@@ -140,6 +182,15 @@ int OrderedList::binarySearch(int key)
         }
     }
     return -1;
+}
+
+void OrderedList::print()
+{
+    for (int i = 0; i < size; i++)
+    {
+        cout << orderedArray[i] << " ";
+    }
+    cout << endl;
 }
 
 #endif //PROJECT_1_ORDEREDLIST_H
