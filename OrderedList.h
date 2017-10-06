@@ -30,9 +30,6 @@ using namespace std;
 class OrderedList
 {
 public:
-    int *orderedArray;
-    int size;
-
     OrderedList(string);
     ~OrderedList();
     void readFromFile(string);
@@ -41,31 +38,31 @@ public:
     int binarySearch(int);
     void print();
 
+private:
+    int *orderedArray;
+    int size;
 };
 
+// Constructor both reads in file and sorts it
 OrderedList::OrderedList(string filePath)
 {
     readFromFile(filePath);
     mergeSort(orderedArray, 0, size-1);
 }
 
+// Destructor
 OrderedList::~OrderedList()
 {
     delete []orderedArray;
 }
 
+// Reads file int array
 void OrderedList::readFromFile(string filePath)
 {
     ifstream dataFile;
 
     // Opens file and makes sure it is valid.
     dataFile.open(filePath.c_str());
-
-    if(!dataFile)
-    {
-        cout << "error with file1" << endl;
-        return;
-    }
 
     if(dataFile.good() && dataFile.is_open())
     {
@@ -95,6 +92,7 @@ void OrderedList::readFromFile(string filePath)
     }
 }
 
+// Mergesorts the array
 void OrderedList::mergeSort(int data[], int first, int last)
 {
     if (first < last)
@@ -106,6 +104,7 @@ void OrderedList::mergeSort(int data[], int first, int last)
     }
 }
 
+// Merge is called by mergesort
 void OrderedList::merge(int data[], int first, int mid, int last)
 {
     int leftLength = mid - first + 1;
@@ -113,8 +112,6 @@ void OrderedList::merge(int data[], int first, int mid, int last)
 
     // Creates temp arrays for left and right half of array.
     int L[leftLength], R[rightLength];
-//    int * L = new int[leftLength];
-//    int * R = new int[rightLength];
 
     // Copies data from array to left and right halves.
     for (int i = 0; i < leftLength; i++)
@@ -159,6 +156,7 @@ void OrderedList::merge(int data[], int first, int mid, int last)
     }
 }
 
+// Binary search, returns index but for this project the return just says if successful or not
 int OrderedList::binarySearch(int key)
 {
     int low = 0;
@@ -184,6 +182,7 @@ int OrderedList::binarySearch(int key)
     return -1;
 }
 
+// Simple print function for debugging
 void OrderedList::print()
 {
     for (int i = 0; i < size; i++)

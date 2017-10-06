@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <iomanip>
 #include "OrderedList.h"
 #include "MTFList.h"
 using namespace std;
@@ -25,8 +26,7 @@ int main(int argc, const char *argv[])
     int key;
 
     // Timing variables
-    clock_t olTimeBegin, olTimeEnd;
-    clock_t mtflTimeBegin, mtflTimeEnd;
+    clock_t timeBegin, timeEnd;
     double olTotalTime = 0.0;
     double mtflTotalTime = 0.0;
 
@@ -34,17 +34,12 @@ int main(int argc, const char *argv[])
     string filePath = string(argv[1]);
 
     //BEGIN ORDERED LIST TEST
-    olTimeBegin = clock();
+    timeBegin = clock();
     OrderedList orderedList(filePath);
 
     // Creates ifstream object and opens the file.
     ifstream dataFile;
     dataFile.open(filePath.c_str());
-
-    if(!dataFile)
-    {
-        cout << "error with file3" << endl;
-    }
 
     // Get length of list and skips to the queries.
     dataFile >> lengthList;
@@ -60,24 +55,20 @@ int main(int argc, const char *argv[])
         dataFile >> key;
         orderedList.binarySearch(key);
     }
-    olTimeEnd = clock();
-    olTotalTime = (double)(olTimeEnd - olTimeBegin)/CLOCKS_PER_SEC;
+
+    timeEnd = clock();
+    olTotalTime = (double)(timeEnd - timeBegin)/CLOCKS_PER_SEC;
     dataFile.close();
     //END ORDERED LIST TEST
 
 
     //BEGIN MTF LIST TEST
     MTFList mtfList(filePath);
-    mtflTimeBegin = clock();
+    timeBegin = clock();
 
     // Creates ifstream object and opens the file.
     ifstream dataFile2;
     dataFile2.open(filePath.c_str());
-
-    if(!dataFile2)
-    {
-        cout << "error with file4" << endl;
-    }
 
     // Get length of list and skips to the queries.
     dataFile2 >> lengthList;
@@ -93,14 +84,17 @@ int main(int argc, const char *argv[])
         dataFile2 >> key;
         mtfList.mtfSearch(key);
     }
-    mtflTimeEnd = clock();
-    mtflTotalTime = (double)(mtflTimeEnd - mtflTimeBegin)/CLOCKS_PER_SEC;
+
+    timeEnd = clock();
+    mtflTotalTime = (double)(timeEnd - timeBegin)/CLOCKS_PER_SEC;
     dataFile2.close();
     //END MTF LIST TEST
 
-    cout << "Time to Complete Sequence of Retrievals for Ordered Array = " << olTotalTime << endl;
-    cout << "Time to Complete Sequence of Retrievals for MTF Linked List = " << mtflTotalTime << endl;
+    // Outputs results
+    cout << "Time to Complete Sequence of Retrievals for Ordered Array = " << setprecision(8) << olTotalTime << endl;
+    cout << "Time to Complete Sequence of Retrievals for MTF Linked List = " << setprecision(8) << mtflTotalTime << endl;
 
+    // Checks which way is faster and outputs results.
     if (olTotalTime > mtflTotalTime)
     {
         cout << "The MTF Linked List was faster." << endl;

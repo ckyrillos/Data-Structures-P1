@@ -42,6 +42,14 @@ private:
     int size;
 };
 
+// Default constructor
+MTFList::MTFList()
+{
+    size = 0;
+    headPtr = NULL;
+}
+
+// Constructor
 MTFList::MTFList(string filePath)
 {
     headPtr = NULL;
@@ -49,6 +57,7 @@ MTFList::MTFList(string filePath)
     readFromFile(filePath);
 }
 
+// Destructor
 MTFList::~MTFList()
 {
     while(headPtr != NULL)
@@ -60,6 +69,7 @@ MTFList::~MTFList()
 
 }
 
+// Reads file into linked list
 void MTFList::readFromFile(string filePath)
 {
     ifstream dataFile;
@@ -67,13 +77,6 @@ void MTFList::readFromFile(string filePath)
 
     // Opens file and makes sure it is valid.
     dataFile.open(filePath.c_str());
-
-    if(!dataFile)
-    {
-        cout << "error with file2" << endl;
-        return;
-    }
-
 
     if(dataFile.good())
     {
@@ -108,6 +111,7 @@ void MTFList::readFromFile(string filePath)
     }
 }
 
+// Move to front search
 int MTFList::mtfSearch(int key)
 {
 
@@ -132,6 +136,7 @@ int MTFList::mtfSearch(int key)
     return 0;
 }
 
+// Simple print function for debugging
 void MTFList::print()
 {
     Node *ptr = headPtr;
@@ -142,9 +147,5 @@ void MTFList::print()
     }
 }
 
-MTFList::MTFList() {
-    size = 0;
-    headPtr = NULL;
-}
 
 #endif //PROJECT_1_MTFLIST_H

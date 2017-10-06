@@ -21,7 +21,8 @@
 #ifndef PROJECT_1_NODE_H
 #define PROJECT_1_NODE_H
 
-class Node {
+class Node
+{
 public:
     int data;
     Node * next;
@@ -31,7 +32,8 @@ public:
 };
 
 
-Node::Node(int value, Node * nextNode) {
+Node::Node(int value, Node * nextNode)
+{
     data = value;
     next = nextNode;
 }
